@@ -1,22 +1,49 @@
 pipeline {
     agent any
 
-  //  environment {
-    //    DOCKER_COMPOSE_PATH = '/usr/local/bin/docker-compose' // Path to Docker Compose (adjust for your setup)
-   // }
-
     stages {
-        stage("build") {
+        stage('Clone Repository') {
             steps {
-                echo 'building the app..'
-                
+                git url: 'https://github.com/Arijghrs/taskflowHR.git'
             }
         }
-        stage("test") {
+
+        stage('Build Backend') {
             steps {
-                echo 'test'
-                
+                script {
+                    sh 'docker-compose build backend'
+                }
+            }
+        }
+
+        stage('Start Services') {
+            steps {
+                script {
+                    sh 'docker-compose up -d db'
+                }
+            }
+        }
+
+        stage('Run Backend Tests') {
+            steps {
+                script {
+                    sh 'docker exec backend npm test'
+                }
+            }
+        }
+
+        stage('Teardown') {
+            steps {
+                script {
+                    sh 'docker-compose down'
+                }
             }
         }
     }
+
+    post {
+        always {
+            echo "Pipeline completed."
+        }
     }
+}

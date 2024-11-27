@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs';
-//import jwt from 'jsonwebtoken';
 import prisma from '../models/userModel.js';
 import { generateToken } from '../utils/jwt.js';
 
@@ -41,8 +40,15 @@ export const loginUser = async (req, res) => {
     }
 
     const token = generateToken(user.id);
-    res.status(200).json({ message: 'Login successful', token });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+    res.status(200).json({ message: 'Login successful' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+};  
