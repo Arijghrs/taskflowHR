@@ -19,7 +19,7 @@ pipeline {
         stage('Start Services') {
             steps {
                 script {
-                    sh 'docker-compose up -d db'
+                    bat 'docker-compose up -d db'
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
         stage('Run Backend Tests') {
             steps {
                 script {
-                    sh 'docker exec backend npm test'
+                    bat 'docker exec backend npm test'
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
         stage('Teardown') {
             steps {
                 script {
-                    sh 'docker-compose down'
+                    bat 'docker-compose down'
                 }
             }
         }
