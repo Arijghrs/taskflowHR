@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-    docker {
-        image 'docker:latest'  // Docker CLI and docker-compose included
-        args '-v /var/run/docker.sock:/var/run/docker.sock'
-    }
-}
+    agent any
 
     stages {
         stage('Clone Repository') {
