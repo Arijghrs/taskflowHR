@@ -11,7 +11,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
-                    sh '#!/bin/bash \n docker-compose build backend'
+                    sh 'bash -c "docker-compose build backend"'
                 }
             }
         }
