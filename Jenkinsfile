@@ -1,33 +1,19 @@
 pipeline {
     agent any
 
-        stages {
-            stage('Clone Repository') {
-                steps {
-                    git url: 'https://github.com/Arijghrs/taskflowHR.git'
-                }
-            }
-       
-        
-        stage('Build Backend') {
-                    steps {
-                        script {
-                            sh 'docker-compose build backend'
-                        }
-                    }
-                }
-
-        stage('Start Services') {
+    stages {
+        stage('Clone Repository') {
             steps {
-                script {
-                    sh 'docker-compose up -d db'
-                }
+                git url: 'https://github.com/Arijghrs/taskflowHR.git'
             }
         }
+
+       
+
         stage('Run Backend Tests') {
             steps {
                 script {
-                    sh 'docker exec backend npm test'
+                    bat 'docker exec backend npm test'
                 }
             }
         }
@@ -35,7 +21,7 @@ pipeline {
         stage('Teardown') {
             steps {
                 script {
-                    sh 'docker-compose down'
+                    bat 'docker-compose down'
                 }
             }
         }
@@ -46,5 +32,5 @@ pipeline {
             echo "Pipeline completed."
         }
     }
-}
 
+}
