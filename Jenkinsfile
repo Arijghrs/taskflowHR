@@ -7,7 +7,21 @@ pipeline {
                 git url: 'https://github.com/Arijghrs/taskflowHR.git'
             }
         }
-
+    stage('Build Backend') {
+                steps {
+                    script {
+                        sh 'docker-compose build backend'
+                    }
+                }
+            }
+    
+            stage('Start Services') {
+                steps {
+                    script {
+                        sh 'docker-compose up -d db'
+                    }
+                }
+            }
         
 
         stage('Run Backend Tests') {
