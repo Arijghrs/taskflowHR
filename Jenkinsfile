@@ -8,21 +8,7 @@ pipeline {
             }
         }
 
-        stage('Build Backend') {
-            steps {
-                script {
-                    bat 'docker-compose build backend'
-                }
-            }
-        }
-
-        stage('Start Services') {
-            steps {
-                script {
-                    bat 'docker-compose up -d db'
-                }
-            }
-        }
+       
 
         stage('Run Backend Tests') {
             steps {
