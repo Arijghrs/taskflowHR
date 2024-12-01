@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-    docker {
-        image 'node:14'
-    }
-}
+    agent any
 
     stages {
         stage('Clone Repository') {
@@ -12,26 +8,12 @@ pipeline {
             }
         }
 
-        stage('Build Backend') {
-            steps {
-                script {
-                    sh 'docker-compose build backend'
-                }
-            }
-        }
-
-        stage('Start Services') {
-            steps {
-                script {
-                    sh 'docker-compose up -d db'
-                }
-            }
-        }
+       
 
         stage('Run Backend Tests') {
             steps {
                 script {
-                    sh 'docker exec backend npm test'
+                    bat 'docker exec backend npm test'
                 }
             }
         }
@@ -39,7 +21,7 @@ pipeline {
         stage('Teardown') {
             steps {
                 script {
-                    sh 'docker-compose down'
+                    bat 'docker-compose down'
                 }
             }
         }
