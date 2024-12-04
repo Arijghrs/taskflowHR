@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -16,6 +17,10 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
+  
 
   //test api
 app.get('/test', (req, res) => {

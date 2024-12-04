@@ -21,6 +21,7 @@ export const addUser = async (req, res) => {
           name,
           email,
           password: hashedPassword,
+          role: role || 'HR',
         },
       });
   
@@ -30,17 +31,17 @@ export const addUser = async (req, res) => {
     }
   };
 
-//get
   export const getUsers = async (req, res) => {
     try {
       const users = await prisma.user.findMany();
-      console.log(users); // Check if users are fetched correctly
+      console.log('Fetched users:', users); // Check what this logs
       res.status(200).json({ message: 'Users fetched successfully', users });
     } catch (error) {
       console.error('Fetch users error:', error);
       res.status(500).json({ message: 'An error occurred while fetching the users.' });
     }
   };
+  
 
 //delete
   export const deleteUser = async (req, res) => {

@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function Login() {
     return (
       <section className="text-gray-600 body-font">
