@@ -25,7 +25,7 @@ const EmployeeList = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5002/user/deleteUser/${id}`);
-      // Update the users list by removing the deleted user
+      
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
       console.log(`User with id ${id} deleted successfully`);
     } catch (error) {
@@ -54,7 +54,7 @@ const EmployeeList = () => {
               <Link to={`/user/${user.id}`} className="font-medium text-gray-900 hover:underline">
                 {user.name}
               </Link>
-              <p className="text-sm text-blue-400">Role: {user.role || 'developer'}</p>
+              <p className="text-sm text-blue-400">Role: {user.department}</p>
             </div>
             <div className="flex-1">
               <p className="font-medium text-gray-900">Email</p>

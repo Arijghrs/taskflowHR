@@ -16,13 +16,16 @@ datasource db {
 
 //User with id as int autoincrement, name as string and email as string
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique
-  password String
-  
+  id         Int    @id @default(autoincrement())
+  name       String
+  email      String @unique
+  password   String
+  department String @default("")
+  role       Role   @default(EMPLOYEE) 
 }
+
 enum Role {
   EMPLOYEE
   HR
 }
+

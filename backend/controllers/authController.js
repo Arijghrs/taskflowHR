@@ -48,6 +48,37 @@ export const loginUser = async (req, res) => {
 };
 
 
+export const createHRUserIfNotExists = async () => {
+  try {
+    // Check if the HR user already exists
+    const hrUser = await prisma.user.findUnique({
+      where: { email: 'hr@example.com' },  // HR email
+    });
+
+    // If the HR user doesn't exist, create a new one
+    if (!hrUser) {
+      const hashedPassword = await bcrypt.hash('defaultPassword123', 10);  // Default password
+
+      await prisma.user.create({
+        data: {
+          name: 'HR User',  // Name for the HR user
+          email: 'hr@example.com',  // HR email
+          password: hashedPassword,  // Password (hashed)
+          department: 'HR',  // HR department
+          role: 'HR',  // Role is HR
+        },
+      });
+
+      console.log('HR user created!');
+    } else {
+      console.log('HR user already exists.');
+    }
+  } catch (error) {
+    console.error('Error creating HR user:', error);
+  }
+};
+
+
 
 
 

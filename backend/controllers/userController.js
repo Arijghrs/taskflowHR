@@ -1,36 +1,71 @@
 import bcrypt from 'bcryptjs';
-//import jwt from 'jsonwebtoken';
 import prisma from '../models/userModel.js';
 import { generateToken } from '../utils/jwt.js';
+import nodemailer from 'nodemailer';
 
 
 //add
 export const addUser = async (req, res) => {
-    const { name, email, password } = req.body;
-  
-    try {
-      const existingUser = await prisma.user.findUnique({ where: { email } });
-      if (existingUser) {
-        return res.status(400).json({ message: 'Email already in use' });
-      }
-  
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      const newUser = await prisma.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          role: role || 'HR',
-        },
-      });
-  
-      res.status(201).json({ message: 'User added successfully', user: newUser });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+  const { name, email, password, department } = req.body;
 
+  try {
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+
+    // Hash the password before saving to the database
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create the new user
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        department,
+        password: hashedPassword,
+        //role: role || 'EMPLOYEE',
+      },
+    });
+
+    // Configure Nodemailer transport
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // You can use other services like SendGrid, Mailgun, etc.
+      auth: {
+        user: process.env.EMAIL_USER, // Your email address
+        pass: process.env.EMAIL_PASS, // Your email password or App Password if 2FA is enabled
+      },
+    });
+
+    // Email content
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Your email address
+      to: email, // Send email to the newly created user
+      subject: 'Your Account Has Been Created!',
+      text: `Hello ${name},\n\nYour account has been successfully created.\n\nHere are your account details:\n\nEmail: ${email}\nPassword: ${password} (Please change it after logging in).\n\nThank you,\nYour Company Team.`,
+    };
+
+    // Send the email with credentials
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+      } else {
+        console.log('Email sent:', info.response);
+      }
+    });
+
+    // Respond with success
+    res.status(201).json({ message: 'User added successfully', user: newUser });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'An error occurred while creating the user.' });
+  }
+};
+
+
+
+//get users
   export const getUsers = async (req, res) => {
     try {
       const users = await prisma.user.findMany();
@@ -97,6 +132,9 @@ export const editUser = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while updating the user.' });
   }
 };
+
+
+
 
 
 
