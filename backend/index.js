@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { createHRUserIfNotExists } from './controllers/authController.js';
@@ -9,7 +10,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-
+app.use(cookieParser());
 // Correct CORS Configuration
 app.use(cors({
   origin: 'http://localhost:3000', // Allow frontend's origin
