@@ -1,0 +1,36 @@
+config:
+  target: 'http://localhost:5002' # L'URL de base de votre serveur
+  phases:
+    - duration: 60 # Durée totale du test (en secondes)
+      arrivalRate: 10 # Nombre d'utilisateurs virtuels créés par seconde
+  defaults:
+    headers:
+      Content-Type: 'application/json' # Les requêtes envoient du JSON
+scenarios:
+  - flow:
+      - get:
+          url: '/test' 
+      - get:
+          url: '/auth/login' 
+      - get:
+          url: '/user/allUsers' 
+      - post:
+          url: '/auth/register' 
+          json:
+            username: 'testUser'
+            password: 'testPass'
+            email: 'test@test.com'
+      - delete:
+          url: '/user/deleteUser' 
+  - name: Test Create user
+    flow:
+      - post:
+          url: '/user/addUser'
+          headers:
+            Content-Type: 'application/json'
+            Cookie: 'token={{ token }}' # Injection de token dans les cookies
+          body:
+            name: 'oumaima'
+            email: 'oumaima@gmail.com'
+            password: 'oumaima'
+            department: 'dev'

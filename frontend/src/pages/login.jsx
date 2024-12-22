@@ -10,13 +10,34 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5002/auth/login', { email, password }, { withCredentials: true });
+      const response = await axios.post(
+        'http://localhost:5002/auth/login',
+        { email, password },
+        { withCredentials: true }
+      );
+  
+      // Assuming the backend response contains role and token
+      const { role, token } = response.data;
+  
+      // Store the role and token in localStorage
+      localStorage.setItem('role', role);
+      localStorage.setItem('token', token);
+  
       alert('Login successful');
-      navigate('/'); 
+  
+      // Redirect based on the user's role
+      if (role === 'HR') {
+        navigate('/EmployeeList');
+        console.log("test");
+        // HR-specific route
+      } else {
+        navigate('/'); // Employee-specific dashboard
+      }
     } catch (error) {
       alert(error.response?.data?.message || 'Something went wrong');
     }
   };
+  
 
   return (
     <section className="text-gray-600 body-font">
@@ -54,7 +75,7 @@ export default function Login() {
               className="w-full bg-white rounded border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
-          <button type="submit" className="text-white bg-purple-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg">
+          <button id='button' type="submit" className="text-white bg-purple-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg">
             Login
           </button>
           <p className="text-xs text-gray-500 mt-3">

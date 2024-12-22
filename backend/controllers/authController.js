@@ -47,46 +47,29 @@ export const loginUser = async (req, res) => {
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-    res.status(200).json({ message: 'Login successful' });
+
+    // Include the role in the response
+    res.status(200).json({ 
+      message: 'Login successful', 
+      role: user.role, 
+      token 
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-
-export const createHRUserIfNotExists = async () => {
+export const logoutUser = async (req, res) => {
   try {
-    // Check if the HR user already exists
-    const hrUser = await prisma.user.findUnique({
-      where: { email: 'hr@example.com' },  // HR email
+    res.cookie('token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      expires: new Date(0),
     });
 
-    // If the HR user doesn't exist, create a new one
-    if (!hrUser) {
-      const hashedPassword = await bcrypt.hash('defaultPassword123', 10);  // Default password
-
-      await prisma.user.create({
-        data: {
-          name: 'HR User',  // Name for the HR user
-          email: 'hr@example.com',  // HR email
-          password: hashedPassword,  // Password (hashed)
-          department: 'HR',  // HR department
-          role: 'HR',  // Role is HR
-        },
-      });
-
-      console.log('HR user created!');
-    } else {
-      console.log('HR user already exists.');
-    }
+    res.status(200).json({ message: 'Logout successful' });
   } catch (error) {
-    console.error('Error creating HR user:', error);
+    res.status(500).json({ message: error.message });
   }
 };
-
-
-
-
-
-
-

@@ -1,8 +1,33 @@
 import React from 'react';
 import { FaTachometerAlt, FaPlane, FaUser, FaClock, FaSignOutAlt, FaUsers } from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ role }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      // Send logout request to the server to clear the token
+      const response = await fetch('http://localhost:5002/auth/logout', {
+        method: 'POST',
+        credentials: 'include',  // Include cookies with the request
+      });
+
+      const data = await response.json();
+      console.log(data.message); // You can log the message for debugging
+
+      // Remove token and role from localStorage after logout
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      console.log('Token and role removed from localStorage'); // Debugging step
+
+      // Redirect to login page
+      navigate('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <div className="w-64 h-screen bg-white flex flex-col justify-between p-4">
       <div>
@@ -96,7 +121,10 @@ const Sidebar = ({ role }) => {
       </div>
 
       {/* Logout */}
-      <div className="flex items-center space-x-4 text-red-500 cursor-pointer hover:bg-red-100 p-2 rounded-md">
+      <div
+        onClick={handleLogout} // Call the logout function when clicked
+        className="flex items-center space-x-4 text-red-500 cursor-pointer hover:bg-red-100 p-2 rounded-md"
+      >
         <FaSignOutAlt />
         <span>Logout</span>
       </div>
