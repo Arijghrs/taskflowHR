@@ -16,22 +16,22 @@ export default function Login() {
         { withCredentials: true }
       );
   
-      // Assuming the backend response contains role and token
+      
       const { role, token } = response.data;
   
-      // Store the role and token in localStorage
+      
       localStorage.setItem('role', role);
       localStorage.setItem('token', token);
   
       alert('Login successful');
   
-      // Redirect based on the user's role
+     
       if (role === 'HR') {
         navigate('/EmployeeList');
         console.log("test");
-        // HR-specific route
+        
       } else {
-        navigate('/'); // Employee-specific dashboard
+        navigate('/'); 
       }
     } catch (error) {
       alert(error.response?.data?.message || 'Something went wrong');

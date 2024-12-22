@@ -59,13 +59,46 @@ export const loginUser = async (req, res) => {
   }
 };
 
+
+
+export const createHRUserIfNotExists = async () => {
+  try {
+    
+    const hrUser = await prisma.user.findUnique({
+      where: { email: 'hr@example.com' },  
+    });
+
+    // If the HR user doesn't exist, create a new one
+    if (!hrUser) {
+      const hashedPassword = await bcrypt.hash('defaultPassword123', 10);  // Default password
+
+      await prisma.user.create({
+        data: {
+          name: 'HR User',  // Name for the HR user
+          email: 'hr@example.com',  // HR email
+          password: hashedPassword,  // Password (hashed)
+          department: 'HR',  // HR department
+          role: 'HR',  // Role is HR
+        },
+      });
+
+      console.log('HR user created!');
+    } else {
+      console.log('HR user already exists.');
+    }
+  } catch (error) {
+    console.error('Error creating HR user:', error);
+  }
+};
+//logout
 export const logoutUser = async (req, res) => {
   try {
+    
     res.cookie('token', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      expires: new Date(0),
+      httpOnly: true,      
+      secure: process.env.NODE_ENV === 'production',  
+      sameSite: 'strict',  
+      expires: new Date(0),  
     });
 
     res.status(200).json({ message: 'Logout successful' });
@@ -73,3 +106,9 @@ export const logoutUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
+
+
+
