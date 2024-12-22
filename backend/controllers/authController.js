@@ -47,8 +47,29 @@ export const loginUser = async (req, res) => {
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-    res.status(200).json({ message: 'Login successful' });
+
+    // Include the role in the response
+    res.status(200).json({ 
+      message: 'Login successful', 
+      role: user.role, 
+      token 
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};  
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    res.cookie('token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      expires: new Date(0),
+    });
+
+    res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

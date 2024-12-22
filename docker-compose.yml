@@ -13,7 +13,7 @@ services:
     image: node:20
     container_name: backend
     working_dir: /app
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npm install && npx prisma migrate deploy  &&  npm run dev"
     environment:
       DATABASE_URL: "postgresql://postgres:root@db:5432/gestionrh?schema=public"
     ports:
