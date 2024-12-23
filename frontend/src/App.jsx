@@ -10,10 +10,10 @@ import EmployeeList from './pages/employeelist';
 import AddEmployee from './pages/addemployee';
 import HRLayout from './components/HRlayout';
 import EmployeeLayout from './components/EMPlayout';
-
+import { useRole } from './context/RoleContext'; // Import the role context
 
 function App() {
-  const role = localStorage.getItem('role');
+  const { role } = useRole(); // Use role from the context
 
   return (
     <BrowserRouter>

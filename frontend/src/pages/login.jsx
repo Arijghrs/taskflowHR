@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useRole } from '../context/RoleContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { updateRole } = useRole();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -15,33 +17,30 @@ export default function Login() {
         { email, password },
         { withCredentials: true }
       );
-  
-      
       const { role, token } = response.data;
-  
-      
-      localStorage.setItem('role', role);
+
+      // Update role using context
+      updateRole(role);
       localStorage.setItem('token', token);
-  
+
       alert('Login successful');
-  
-     
+
+      // Navigate based on role
       if (role === 'HR') {
         navigate('/EmployeeList');
-        console.log("test");
-        
       } else {
-        navigate('/'); 
+        navigate('/');
       }
     } catch (error) {
       alert(error.response?.data?.message || 'Something went wrong');
     }
   };
-  
 
   return (
     <section className="text-gray-600 body-font">
+      {/* Your existing login form UI */}
       <div className="container px-5 py-24 mx-auto flex flex-wrap items-center">
+        {/* Left-side content */}
         <div className="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
           <h1 className="title-font font-medium text-3xl text-gray-900">
             Welcome Back!
@@ -50,13 +49,19 @@ export default function Login() {
             Sign in to access your dashboard.
           </p>
         </div>
+
+        {/* Login form */}
         <form
           className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
           onSubmit={handleLogin}
         >
-          <h2 className="text-gray-900 text-lg font-medium title-font mb-5">Sign In</h2>
+          <h2 className="text-gray-900 text-lg font-medium title-font mb-5">
+            Sign In
+          </h2>
           <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
+            <label htmlFor="email" className="leading-7 text-sm text-gray-600">
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -66,7 +71,9 @@ export default function Login() {
             />
           </div>
           <div className="relative mb-4">
-            <label htmlFor="password" className="leading-7 text-sm text-gray-600">Password</label>
+            <label htmlFor="password" className="leading-7 text-sm text-gray-600">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -75,7 +82,10 @@ export default function Login() {
               className="w-full bg-white rounded border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
-          <button id='button' type="submit" className="text-white bg-purple-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg">
+          <button
+            type="submit"
+            className="text-white bg-purple-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg"
+          >
             Login
           </button>
           <p className="text-xs text-gray-500 mt-3">
