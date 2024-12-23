@@ -58,7 +58,7 @@ const HRSidebar = () => {
           </NavLink>
 
           <NavLink
-            to="/delete-profile"
+            to="/RHtimetable"
             className={({ isActive }) =>
               isActive
                 ? 'flex items-center space-x-4 text-red-500 bg-red-100 p-2 rounded-md'

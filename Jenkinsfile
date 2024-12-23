@@ -9,10 +9,12 @@ pipeline {
         }
 
        
+       
 
         stage('Run Backend Tests') {
             steps {
                 script {
+                    bat 'docker exec backend npm test'
                     bat 'docker exec backend npm test'
                 }
             }
@@ -21,6 +23,7 @@ pipeline {
         stage('Teardown') {
             steps {
                 script {
+                    bat 'docker-compose down'
                     bat 'docker-compose down'
                 }
             }
@@ -32,5 +35,4 @@ pipeline {
             echo "Pipeline completed."
         }
     }
-
 }
