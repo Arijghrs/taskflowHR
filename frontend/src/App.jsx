@@ -10,6 +10,7 @@ import EmployeeList from './pages/employeelist';
 import AddEmployee from './pages/addemployee';
 import HRLayout from './components/HRlayout';
 import EmployeeLayout from './components/EMPlayout';
+import RHtimetable from './pages/RHtimetable';
 import { useRole } from './context/RoleContext'; // Import the role context
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="addemployee" element={<AddEmployee />} />
             <Route path="RHholidaylist" element={<RHholidaylist />} />
             <Route path="RHEvaluationHoliday" element={<RHEvaluationHoliday />} />
+            <Route path="RHtimetable" element={<RHtimetable />} />
           </Route>
         )}
 
@@ -38,6 +40,8 @@ function App() {
             <Route path="holiday" element={<HolidayRequest />} />
             <Route path="time" element={<Time />} />
             <Route path="profile" element={<Profile />} />
+            
+            
           </Route>
         )}
 
