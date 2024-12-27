@@ -7,6 +7,7 @@ const HolidayRequest = () => {
     reason: '',
     startDate: null,
     endDate: null,
+    userId: null, // Assuming you have a way to set this userId
   });
 
   const [errors, setErrors] = useState({});
@@ -47,14 +48,32 @@ const HolidayRequest = () => {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      console.log('Holiday Request submitted:', holidayRequest);
+      
+      try {
+        const response = await fetch('http://localhost:5002/employee/holiday', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(holidayRequest),
+        });
+
+        if (!response.ok) {
+          const result = await response.json();
+          setErrors({ serverError: result.error });
+        } else {
+          const holiday = await response.json();
+          console.log('Holiday Request submitted:', holiday);
+          setHolidayRequest({ reason: '', startDate: null, endDate: null, userId: null });
+        }
+      } catch (error) {
+        console.error('Error submitting holiday:', error);
+      }
     }
   };
 

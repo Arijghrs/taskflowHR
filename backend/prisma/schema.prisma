@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x"]  // Add "debian-openssl-3.0.x" here
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -14,14 +8,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//User with id as int autoincrement, name as string and email as string
 model User {
-  id         Int    @id @default(autoincrement())
-  name       String
-  email      String @unique
-  password   String
-  department String @default("")
-  role       Role   @default(EMPLOYEE) 
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  password     String
+  department   String         @default("")
+  role         Role           @default(EMPLOYEE)
+  timeTracking TimeTracking[]
+  holidays     Holiday[]
 }
 
 enum Role {
@@ -29,3 +24,25 @@ enum Role {
   HR
 }
 
+model TimeTracking {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  date        DateTime @default(now())
+  entryTime   DateTime
+  lunchStart  DateTime
+  lunchEnd    DateTime
+  exitTime    DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Holiday {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  reason      String
+  startTime   DateTime
+  endTime     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
